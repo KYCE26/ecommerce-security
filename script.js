@@ -63,19 +63,27 @@ function addDreadLog(logs) {
 
 // Data pelatihan (Contoh: username length, amount, threat level)
 const trainingData = tf.tensor2d([
-    [3, 20000], // Pendek (username length < 4), Amount kecil
+    [2, 5000],   // Username pendek, jumlah kecil
+    [3, 20000],  // Pendek (username length < 4), Amount kecil
     [7, 10000000], // Normal username, Amount tinggi
     [2, 1000000], // Pendek username, Amount sedang
     [10, 50000000], // Panjang username, Amount besar
-], [4, 2]); // 4 sampel, 2 fitur
+    [1, 1000],   // Username sangat pendek, jumlah kecil
+    [4, 15000],  // Username normal, jumlah kecil
+    [5, 20000000], // Username normal, jumlah tinggi
+], [8, 2]); // 8 sampel, 2 fitur
 
 // Label (0 = Tidak Berisiko, 1 = Berisiko)
 const outputData = tf.tensor2d([
+    [1], // Berisiko
     [0], // Tidak Berisiko
     [1], // Berisiko
     [1], // Berisiko
     [1], // Berisiko
-], [4, 1]); // 4 sampel, 1 label
+    [1], // Berisiko
+    [0], // Tidak Berisiko
+    [1], // Berisiko
+], [8, 1]); // 8 sampel, 1 label
 
 // Membuat dan melatih model
 const model = tf.sequential();
@@ -122,6 +130,7 @@ model.fit(trainingData, outputData, { epochs: 50 }).then(() => {
 // Fungsi untuk memprediksi risiko berdasarkan input pengguna
 async function predictRisk(username, amount) {
     const usernameLength = username.length;
+    console.log(`Username Length: ${usernameLength}, Amount: ${amount}`); // Log untuk debugging
     const inputTensor = tf.tensor2d([[usernameLength, amount]]);
     const prediction = await model.predict(inputTensor).data();
 
