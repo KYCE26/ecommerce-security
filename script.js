@@ -2,18 +2,37 @@
 function detectStrideThreats(username, amount) {
     const strideLog = [];
 
-    if (username.toLowerCase().includes("admin")) {
-        strideLog.push("Spoofing detected: Username contains 'admin'.");
-    }
+    // Spoofing
     if (username.length < 3) {
         strideLog.push("Spoofing detected: Suspicious short username.");
     }
+
+    // Tampering
     if (amount > 10000000) {
         strideLog.push("Tampering detected: Unusual high transaction amount.");
     }
+    if (amount % 1000 !== 0) {
+        strideLog.push("Tampering detected: Transaction amount is not rounded.");
+    }
 
+    // Repudiation
     if (username === "") {
         strideLog.push("Repudiation detected: Username field is empty.");
+    }
+
+    // Information Disclosure
+    if (username.match(/[0-9]/)) {
+        strideLog.push("Information Disclosure detected: Username contains numeric values, which might indicate leaked sensitive data.");
+    }
+
+    // Denial of Service
+    if (amount <= 0) {
+        strideLog.push("Denial of Service detected: Invalid transaction amount (<= 0).");
+    }
+
+    // Elevation of Privilege
+    if (username.toLowerCase() === "root" || username.toLowerCase() === "admin") {
+        strideLog.push("Elevation of Privilege detected: Username is highly privileged.");
     }
 
     return strideLog;
@@ -22,18 +41,36 @@ function detectStrideThreats(username, amount) {
 // Fungsi untuk menilai risiko DREAD berdasarkan input transaksi
 function calculateDreadRisk(username, amount) {
     const dreadLog = [];
+
+    // Damage Potential
     if (amount > 10000000) {
         dreadLog.push({ title: "High-value transaction", score: 8 });
     }
-    if (username.length < 3) {
-        dreadLog.push({ title: "Suspicious short username", score: 7 });
+    if (amount <= 0) {
+        dreadLog.push({ title: "Invalid transaction amount", score: 9 });
     }
+
+    // Reproducibility
+    if (username.length < 3) {
+        dreadLog.push({ title: "Easily reproducible attack (short username)", score: 7 });
+    }
+
+    // Exploitability
+    if (username.toLowerCase().includes("admin") || username.toLowerCase().includes("root")) {
+        dreadLog.push({ title: "High exploitability: Privileged username", score: 9 });
+    }
+
+    // Affected Users
+    dreadLog.push({ title: "Potential impact on multiple accounts", score: 6 });
+
+    // Discoverability
     if (amount % 1000 !== 0) {
-        dreadLog.push({ title: "Unusual transaction amount", score: 6 });
+        dreadLog.push({ title: "Easily discoverable anomaly in transaction amount", score: 5 });
     }
 
     return dreadLog;
 }
+
 
 // Fungsi untuk menambahkan log STRIDE ke elemen HTML
 function addStrideLog(logs) {
