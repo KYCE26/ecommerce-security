@@ -38,22 +38,39 @@ function detectStrideThreats(username, amount) {
     return strideLog;
 }
 
-
 // Fungsi untuk menilai risiko DREAD berdasarkan input transaksi
 function calculateDreadRisk(username, amount) {
     const dreadLog = [];
+
+    // Damage Potential
     if (amount > 10000000) {
         dreadLog.push({ title: "High-value transaction", score: 8 });
     }
-    if (username.length < 3) {
-        dreadLog.push({ title: "Suspicious short username", score: 7 });
+    if (amount <= 0) {
+        dreadLog.push({ title: "Invalid transaction amount", score: 9 });
     }
+
+    // Reproducibility
+    if (username.length < 3) {
+        dreadLog.push({ title: "Easily reproducible attack (short username)", score: 7 });
+    }
+
+    // Exploitability
+    if (username.toLowerCase().includes("admin") || username.toLowerCase().includes("root")) {
+        dreadLog.push({ title: "High exploitability: Privileged username", score: 9 });
+    }
+
+    // Affected Users
+    dreadLog.push({ title: "Potential impact on multiple accounts", score: 6 });
+
+    // Discoverability
     if (amount % 1000 !== 0) {
-        dreadLog.push({ title: "Unusual transaction amount", score: 6 });
+        dreadLog.push({ title: "Easily discoverable anomaly in transaction amount", score: 5 });
     }
 
     return dreadLog;
 }
+
 
 // Fungsi untuk menambahkan log STRIDE ke elemen HTML
 function addStrideLog(logs) {
