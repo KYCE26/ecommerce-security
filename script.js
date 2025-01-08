@@ -4,9 +4,6 @@ function detectStrideThreats(username, amount) {
     const strideLog = [];
 
     // Spoofing
-    if (username.toLowerCase().includes("admin")) {
-        strideLog.push("Spoofing detected: Username contains 'admin'.");
-    }
     if (username.length < 3) {
         strideLog.push("Spoofing detected: Suspicious short username.");
     }
