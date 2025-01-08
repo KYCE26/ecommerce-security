@@ -31,7 +31,7 @@ function detectStrideThreats(username, amount) {
     }
 
     // Elevation of Privilege
-    if (username.toLowerCase() === "root" || username.toLowerCase() === "superuser") {
+    if (username.toLowerCase() === "root" || username.toLowerCase() === "admin") {
         strideLog.push("Elevation of Privilege detected: Username is highly privileged.");
     }
 
