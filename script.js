@@ -1,5 +1,4 @@
 // Fungsi untuk mendeteksi ancaman STRIDE berdasarkan input transaksi
-// Fungsi untuk mendeteksi ancaman STRIDE berdasarkan input transaksi
 function detectStrideThreats(username, amount) {
     const strideLog = [];
 
